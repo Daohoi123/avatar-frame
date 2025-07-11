@@ -15,54 +15,19 @@
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5;
         }
-        /* Custom styles for file input */
-        .file-input-button {
-            cursor: pointer;
+        /* Custom style for the drag-and-drop area */
+        .drag-drop-area {
+            background-color: #f8fafc;
+            background-image:
+                linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+                linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
             border: 2px dashed #d1d5db;
             transition: all 0.2s ease-in-out;
         }
-        .file-input-button:hover {
+        .drag-drop-area.drag-over {
             border-color: #3b82f6;
             background-color: #eff6ff;
-        }
-        /* Custom styles for range slider */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]:focus {
-            outline: none;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 6px;
-            cursor: pointer;
-            background: #d1d5db;
-            border-radius: 3px;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: #fb923c;
-            cursor: pointer;
-            margin-top: -7px; /* You need to specify a margin in Chrome, but not in Firefox */
-        }
-        input[type=range]::-moz-range-track {
-            width: 100%;
-            height: 6px;
-            cursor: pointer;
-            background: #d1d5db;
-            border-radius: 3px;
-        }
-        input[type=range]::-moz-range-thumb {
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            background: #fb923c;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -75,44 +40,59 @@
             <p class="text-lg text-gray-500 mt-2">Tải ảnh, điều chỉnh và tạo dấu ấn cá nhân!</p>
         </header>
 
-        <!-- Main Content: Changed to a 2-column layout -->
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <!-- Main Content: 2-column layout, columns are equal height -->
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             <!-- Left Panel: Controls -->
-            <aside class="md:col-span-1 bg-white p-6 rounded-lg shadow-md h-fit">
-                <!-- Step 1: Upload -->
-                <div class="mb-6">
-                    <h2 class="text-2xl font-semibold mb-2">Tải ảnh lên</h2>
-                    <p class="text-gray-600 mb-4">Chọn một ảnh từ máy tính hoặc điện thoại.</p>
-                    <label for="image-loader" class="file-input-button w-full block text-center p-6 rounded-lg bg-blue-50 hover:bg-blue-100 border-blue-300">
-                        <span class="font-semibold text-blue-600">Chọn ảnh</span>
-                    </label>
-                    <input type="file" id="image-loader" class="hidden" accept="image/*">
-                </div>
+            <aside class="md:col-span-1 bg-white p-8 rounded-3xl shadow-md text-center flex flex-col">
+                <div class="flex-grow">
+                    <!-- Step 1: Upload -->
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-semibold mb-2">Tải ảnh lên</h2>
+                        <p class="text-gray-600 mb-4 text-base">Chọn một ảnh từ máy tính hoặc điện thoại.</p>
+                        
+                        <!-- Drag and Drop Area -->
+                        <label for="image-loader" id="drop-area" class="drag-drop-area w-full flex flex-col items-center justify-center p-8 rounded-2xl cursor-pointer">
+                            <svg class="w-16 h-16 text-gray-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                            </svg>
+                            <p class="text-gray-500">
+                                <span class="font-semibold">Kéo thả ảnh</span> hoặc <span class="font-semibold text-blue-600">Bấm vào đây</span>
+                                <br>để đăng tải hình ảnh lên
+                            </p>
+                        </label>
+                        <input type="file" id="image-loader" class="hidden" accept="image/*">
+                    </div>
 
-                <hr class="my-6 border-gray-200">
+                    <hr class="my-8 border-gray-200">
 
-                <!-- Step 2: Download -->
-                <div>
-                    <h2 class="text-2xl font-semibold mb-2">Lưu lại thành quả</h2>
-                    <p class="text-gray-600 mb-4">Tải ảnh đã ghép khung về máy của bạn.</p>
-                    <button id="download-btn" class="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-4 rounded-lg transition duration-300" disabled>
-                        Tải ảnh về
-                    </button>
+                    <!-- Step 2: Download -->
+                    <div>
+                        <h2 class="text-3xl font-semibold mb-2">Lưu lại thành quả</h2>
+                        <p class="text-gray-600 mb-4 text-base">Tải ảnh đã ghép khung về máy của bạn.</p>
+                        <button id="download-btn" class="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-4 rounded-2xl transition duration-300 text-lg" disabled>
+                            Tải ảnh về
+                        </button>
+                    </div>
                 </div>
             </aside>
 
             <!-- Right Panel: Canvas Preview -->
-            <div class="md:col-span-1">
-                <div id="canvas-container" class="relative w-full aspect-square bg-white rounded-lg shadow-md flex items-center justify-center overflow-hidden">
+            <div class="md:col-span-1 flex flex-col">
+                <div id="canvas-container" class="relative w-full aspect-square flex items-center justify-center overflow-hidden">
                     <canvas id="avatar-canvas" width="1024" height="1024" class="w-full h-full"></canvas>
-                    <div id="placeholder-text" class="absolute text-gray-500 text-center font-semibold">
-                        <p>Chọn ảnh và bắt đầu</p>
+                    <div id="placeholder-text" class="absolute text-gray-500 text-center font-semibold text-2xl">
+                        <p>Chọn ảnh để bắt đầu</p>
                     </div>
                 </div>
-                <div class="bg-white p-4 mt-4 rounded-lg shadow-md">
-                    <h3 class="font-semibold mb-2">Phóng to / Thu nhỏ</h3>
-                    <p class="text-sm text-gray-600 mb-3">Dùng chuột để di chuyển ảnh, dùng thanh trượt để chỉnh kích thước.</p>
-                    <input type="range" id="zoom-slider" min="0.1" max="3" step="0.01" value="1" class="w-full" disabled>
+                <!-- Zoom control box updated -->
+                <div class="p-3 mt-4 rounded-lg text-center">
+                    <p class="text-sm text-gray-600 mb-3">
+                        Dùng chuột để di chuyển ảnh<br>
+                        Dùng thanh trượt để chỉnh kích thước
+                    </p>
+                    <div class="max-w-[250px] mx-auto">
+                        <input type="range" id="zoom-slider" min="0.1" max="3" step="0.01" value="1" class="w-full" disabled>
+                    </div>
                 </div>
             </div>
         </main>
@@ -125,6 +105,7 @@
         const downloadBtn = document.getElementById('download-btn');
         const zoomSlider = document.getElementById('zoom-slider');
         const placeholderText = document.getElementById('placeholder-text');
+        const dropArea = document.getElementById('drop-area');
 
         const FRAME_URL = 'https://res.cloudinary.com/dzfuqyqoq/image/upload/v1752215146/sdfgfdhgfh_ux81fr.png';
         const CANVAS_SIZE = 1024;
@@ -138,8 +119,7 @@
         let scale = 1;
         let offset = { x: 0, y: 0 };
         let isDragging = false;
-        let startDrag = { x: 0, y: 0 };
-
+        
         // Draw the frame once it's loaded
         frame.onload = () => {
             redrawCanvas();
@@ -147,68 +127,83 @@
 
         // Redraws the entire canvas based on current state
         function redrawCanvas() {
-            // Clear canvas
             ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-            // Draw user image if it exists
             if (userImage) {
                 placeholderText.style.display = 'none';
                 ctx.save();
-                
-                // Create a circular clipping path
                 ctx.beginPath();
                 ctx.arc(CANVAS_SIZE / 2, CANVAS_SIZE / 2, CIRCLE_RADIUS, 0, Math.PI * 2, true);
                 ctx.clip();
-
-                // Calculate scaled dimensions
                 const scaledWidth = userImage.width * scale;
                 const scaledHeight = userImage.height * scale;
-                
-                // Calculate position to draw the image
                 const drawX = (CANVAS_SIZE - scaledWidth) / 2 + offset.x;
                 const drawY = (CANVAS_SIZE - scaledHeight) / 2 + offset.y;
-
-                // Draw the user's image
                 ctx.drawImage(userImage, drawX, drawY, scaledWidth, scaledHeight);
-
                 ctx.restore();
             } else {
-                 placeholderText.style.display = 'flex';
+                placeholderText.style.display = 'flex';
             }
-
-            // Draw the frame on top
             if (frame.complete) {
                 ctx.drawImage(frame, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
             }
         }
 
-        // Handle image upload
-        imageLoader.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
+        // Central function to handle a file object
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) {
+                console.error("File is not an image.");
+                return;
+            }
             const reader = new FileReader();
             reader.onload = () => {
                 userImage = new Image();
                 userImage.src = reader.result;
                 userImage.onload = () => {
-                    // Reset state for the new image
                     offset = { x: 0, y: 0 };
-                    // Set initial scale to fit the circle
                     const hRatio = (CIRCLE_RADIUS * 2) / userImage.width;
                     const vRatio = (CIRCLE_RADIUS * 2) / userImage.height;
-                    scale = Math.max(hRatio, vRatio); // Use max to fill the circle
+                    scale = Math.max(hRatio, vRatio);
                     zoomSlider.value = scale;
-                    
-                    // Enable controls
                     downloadBtn.disabled = false;
                     zoomSlider.disabled = false;
-                    
                     redrawCanvas();
                 };
             };
             reader.readAsDataURL(file);
+        }
+
+        // Handle image upload from file input
+        imageLoader.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                handleFile(e.target.files[0]);
+            }
         });
+
+        // Drag and Drop events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => {
+                dropArea.classList.add('drag-over');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => {
+                dropArea.classList.remove('drag-over');
+            }, false);
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        }, false);
 
         // Handle zoom slider
         zoomSlider.addEventListener('input', (e) => {
@@ -217,43 +212,66 @@
             redrawCanvas();
         });
 
-        // Handle mouse drag for panning
-        canvas.addEventListener('mousedown', (e) => {
+        // --- Start of new, corrected drag/touch logic ---
+        let startPoint = { x: 0, y: 0 };
+        let startOffset = { x: 0, y: 0 };
+
+        function getEventPoint(e) {
+            if (e.touches && e.touches.length > 0) {
+                return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+            return { x: e.clientX, y: e.clientY };
+        }
+
+        function onDragStart(e) {
             if (!userImage) return;
+            e.preventDefault();
             isDragging = true;
-            // Adjust for the canvas's position on the page
+            const point = getEventPoint(e);
+            startPoint = { x: point.x, y: point.y };
+            startOffset = { x: offset.x, y: offset.y };
+            canvas.style.cursor = 'grabbing';
+        }
+
+        function onDragMove(e) {
+            if (!isDragging || !userImage) return;
+            e.preventDefault();
+            const point = getEventPoint(e);
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
-            startDrag.x = e.clientX - offset.x / scaleX;
-            startDrag.y = e.clientY - offset.y / scaleY;
-            canvas.style.cursor = 'grabbing';
-        });
+            
+            const dx = (point.x - startPoint.x) * scaleX;
+            const dy = (point.y - startPoint.y) * scaleY;
 
-        canvas.addEventListener('mousemove', (e) => {
-            if (isDragging && userImage) {
-                const rect = canvas.getBoundingClientRect();
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                offset.x = (e.clientX - startDrag.x) * scaleX;
-                offset.y = (e.clientY - startDrag.y) * scaleY;
-                redrawCanvas();
-            }
-        });
+            offset.x = startOffset.x + dx;
+            offset.y = startOffset.y + dy;
+            redrawCanvas();
+        }
 
-        const stopDragging = () => {
+        function onDragEnd(e) {
+            if (!isDragging) return;
+            e.preventDefault();
             isDragging = false;
             canvas.style.cursor = 'grab';
-        };
-        canvas.addEventListener('mouseup', stopDragging);
-        canvas.addEventListener('mouseleave', stopDragging);
+        }
+
+        // Mouse events
+        canvas.addEventListener('mousedown', onDragStart);
+        document.addEventListener('mousemove', onDragMove);
+        document.addEventListener('mouseup', onDragEnd);
+        
+        // Touch events for mobile
+        canvas.addEventListener('touchstart', onDragStart, { passive: false });
+        document.addEventListener('touchmove', onDragMove, { passive: false });
+        document.addEventListener('touchend', onDragEnd);
+        document.addEventListener('touchcancel', onDragEnd);
+        // --- End of new, corrected drag/touch logic ---
         
         // Handle download
         downloadBtn.addEventListener('click', () => {
             if (!userImage) return;
-            // Redraw one last time to ensure quality
             redrawCanvas();
-
             const link = document.createElement('a');
             link.download = 'avatar-khung.png';
             link.href = canvas.toDataURL('image/png');
